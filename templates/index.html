@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Paper Browser</title>
+</head>
+<body>
+    <form method="POST" action="/">
+        <label for="keyword">Keyword:</label>
+        <input type="text" name="keyword" required>
+        
+        <label for="date_range">Select Date Range:</label>
+        <select name="date_range" id="date_range" required>
+            <option value="1">Last year</option>
+            <option value="2">Last month</option>
+            <option value="3">Last week</option>
+            <option value="4">Custom Range</option>
+        </select>
+        
+        <div id="custom_date_range" style="display: none;">
+            <label for="start_date">Start Date:</label>
+            <input type="date" name="start_date" required>
+            <label for="end_date">End Date:</label>
+            <input type="date" name="end_date" required>
+        </div>
+        
+        <button type="submit">Search</button>
+    </form>
+    <ul>
+        {% for publication in publications %}
+            <li>
+                <a href="{{ publication.link }}">{{ publication.title }}</a>
+                <p>{{ publication.summary }}</p>
+                <p>Published: {{ publication.published }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+    
+    <script>
+        document.getElementById('date_range').addEventListener('change', function() {
+            var customDateRange = document.getElementById('custom_date_range');
+            if (this.value === '4') {
+                customDateRange.style.display = 'block';
+            } else {
+                customDateRange.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
