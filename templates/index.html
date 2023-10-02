@@ -19,10 +19,11 @@
         
         <div id="custom_date_range" style="display: none;">
             <label for="start_date">Start Date:</label>
-            <input type="date" name="start_date" required>
+            <input type="date" name="start_date">
             <label for="end_date">End Date:</label>
-            <input type="date" name="end_date" required>
+            <input type="date" name="end_date">
         </div>
+        
         
         <button type="submit">Search</button>
     </form>
@@ -39,12 +40,19 @@
     <script>
         document.getElementById('date_range').addEventListener('change', function() {
             var customDateRange = document.getElementById('custom_date_range');
+            var startDateInput = document.querySelector('input[name="start_date"]');
+            var endDateInput = document.querySelector('input[name="end_date"]');
             if (this.value === '4') {
                 customDateRange.style.display = 'block';
+                startDateInput.required = true;
+                endDateInput.required = true;
             } else {
                 customDateRange.style.display = 'none';
+                startDateInput.required = false;
+                endDateInput.required = false;
             }
         });
+
     </script>
 </body>
 </html>

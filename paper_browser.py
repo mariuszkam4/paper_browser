@@ -3,9 +3,7 @@ import xml.etree.ElementTree as ET
 from flask import Flask, render_template, request
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
-import logging
 
-# logging.basicConfig(filename='app.log', level=logging.DEBUG)
 app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
@@ -16,21 +14,19 @@ def index():
 
     if request.method == 'POST':
         keyword = request.form.get('keyword')
+        print (f"Słowo kluczowe: {keyword}")
         date_range = request.form.get('date_range')
-        # logging.debug(f"Date selected: {date}")
-
+        print (f"Opcja daty: {date_range}")
+        
         if date_range == "1":
             end_date = date.today()
             start_date = end_date - relativedelta(years=1)
-            # logging.debug(f"Start date: {start_date}, end date: {end_date}")
         elif date_range == "2":
             end_date = date.today()
-            start_date = end_date - timedelta(days=30)
-            # logging.debug(f"Start date: {start_date}, end date: {end_date}")
+            start_date = end_date - timedelta(days=30)            
         elif date_range == "3":
             end_date = date.today()
-            start_date = end_date - relativedelta(weeks=1)
-            # logging.debug(f"Start date: {start_date}, end date: {end_date}")
+            start_date = end_date - relativedelta(weeks=1)            
         elif date_range == "4":
             start_date_str = request.form.get('start_date')
             end_date_str = request.form.get('end_date')
@@ -38,15 +34,13 @@ def index():
             # Konwersja łańcuchów znaków na obiekty daty
             start_date = date.fromisoformat(start_date_str)
             end_date = date.fromisoformat(end_date_str)
-            # logging.debug(f"Start date: {start_date}, end date: {end_date}")
-        
+                    
         url = "http://export.arxiv.org/api/query"
         parameters = {
             "search_query": f"{keyword} AND submittedDate:[{start_date.strftime('%Y-%m-%d')}T00:00:00Z TO {end_date.strftime('%Y-%m-%d')}T23:59:59Z]",
             "max_results": 10
         }
-        # logging.debug(f"Query parameters: {parameters}")
-
+        
         response = requests.get(url, params=parameters)
 
         if response.status_code == 200:
