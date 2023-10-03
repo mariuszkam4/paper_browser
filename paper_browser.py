@@ -14,10 +14,14 @@ def index():
 
     if request.method == 'POST':
         keyword = request.form.get('keyword')
-        print (f"Słowo kluczowe: {keyword}")
-        date_range = request.form.get('date_range')
-        print (f"Opcja daty: {date_range}")
+        if not keyword.isalnum(): 
+            return "Invalid keyword", 400
         
+        max_results = request.form.get('max_results')
+        if not max_results.isnumeric():
+            return "Invalid numeber of max results", 400
+
+        date_range = request.form.get('date_range')
         if date_range == "1":
             end_date = date.today()
             start_date = end_date - relativedelta(years=1)
@@ -34,15 +38,23 @@ def index():
             # Konwersja łańcuchów znaków na obiekty daty
             start_date = date.fromisoformat(start_date_str)
             end_date = date.fromisoformat(end_date_str)
-                    
+        
+        sortBy = request.form.get ('sortBy', 'relevance')
+        sortOrder = request.form.get ('sortOrder', 'ascending')
+
         url = "http://export.arxiv.org/api/query"
         parameters = {
             "search_query": f"{keyword} AND submittedDate:[{start_date.strftime('%Y-%m-%d')}T00:00:00Z TO {end_date.strftime('%Y-%m-%d')}T23:59:59Z]",
-            "max_results": 10
+            "max_results": int(max_results),
+            "sortBy": sortBy,
+            "sortOrder": sortOrder
         }
+        try:
+            response = requests.get(url, params=parameters)
+            response.raise_for_status()
+        except requests.RequestException as e:
+            return "An error occured while processing your request. Please try again later.", 500
         
-        response = requests.get(url, params=parameters)
-
         if response.status_code == 200:
             root = ET.fromstring(response.text)
             for entry in root.findall('{http://www.w3.org/2005/Atom}entry'):

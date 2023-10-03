@@ -3,11 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Paper Browser</title>
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ['\\(','\\)'] ]
+        }
+        });
+</script>
 </head>
 <body>
     <form method="POST" action="/">
         <label for="keyword">Keyword:</label>
         <input type="text" name="keyword" required>
+
+        <label for="max_results">Max Results:</label>
+        <input type="text" name="max_results" required>
         
         <label for="date_range">Select Date Range:</label>
         <select name="date_range" id="date_range" required>
@@ -16,7 +29,18 @@
             <option value="3">Last week</option>
             <option value="4">Custom Range</option>
         </select>
-        
+        <label for="sortBy">Sort by:</label>
+        <select name="sortBy" id="sortBy" required>
+            <option value="relevance">Relevance</option>
+            <option value="lastUpdatedDate">Last Updated Date</option>
+            <option value="submittedDate">Submitted Date</option>
+        </select>
+
+        <label for="sortOrder">Sort order:</label>
+        <select name="sortOrder" id="sortOrder" required>
+            <option value="ascending">Ascending</option>
+            <option value="descending">Descending</option>
+        </select>
         <div id="custom_date_range" style="display: none;">
             <label for="start_date">Start Date:</label>
             <input type="date" name="start_date">
