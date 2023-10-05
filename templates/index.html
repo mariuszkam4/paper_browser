@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Paper Browser</title>
+
+    <!-- Import MathJax for rendering mathematical notation -->
     <script type="text/javascript" async
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
+    
+    <!-- MathJax cnofiguration -->
     <script type="text/x-mathjax-config">
         MathJax.Hub.Config({
             tex2jax: {
@@ -15,15 +19,17 @@
     </script>
 </head>
 <body>
+    <!-- Search from for quering papers -->    
     <form method="POST" action="/">
         <div id="keywords_container">
+            <!-- Input for the first keyword -->
             <div class="keyword_input">
                 <label for="keyword_1">Keyword:</label>
                 <input type="text" name="keyword_1" required>
             </div>
         </div>
         <button type="button" id="add_keyword">Add Another Keyword</button>
-
+        <!-- Other input fields for querying -->
         <label for="max_results">Max Results:</label>
         <input type="text" name="max_results" required>
 
@@ -46,6 +52,8 @@
             <option value="ascending">Ascending</option>
             <option value="descending">Descending</option>
         </select>
+        
+        <!-- Container for custom date range inputs, hidden by default -->
         <div id="custom_date_range" style="display: none;">
             <label for="start_date">Start Date:</label>
             <input type="date" name="start_date">
@@ -55,6 +63,8 @@
 
         <button type="submit">Search</button>
     </form>
+
+    <!-- Display results if there are any -->
     {% if publications %}
     <p>Used keywords: 
         {% for keyword in keywords_list %}
@@ -74,11 +84,15 @@
     </ul>
     {% endif %}
 
+    <!-- JavaScript for dynamic functionality -->
     <script>
+        // Show/hide custom date range inputs based on date range dropdown selection
         document.getElementById('date_range').addEventListener('change', function() {
             var customDateRange = document.getElementById('custom_date_range');
             var startDateInput = document.querySelector('input[name="start_date"]');
             var endDateInput = document.querySelector('input[name="end_date"]');
+            
+            // If custom range is selected, display date inputs and set them as required
             if (this.value === '4') {
                 customDateRange.style.display = 'block';
                 startDateInput.required = true;
@@ -90,11 +104,14 @@
             }
         });
 
+        // Add new keyword input fields dynamically
         var keywordCount = 1;
         document.getElementById('add_keyword').addEventListener('click', function() {
             keywordCount++;
             var keywordDiv = document.createElement('div');
             keywordDiv.className = 'keyword_input';
+            
+            // Create new keyword input field with label and remove button
             keywordDiv.innerHTML = `
                 <label for="keyword_${keywordCount}">Keyword:</label>
                 <input type="text" name="keyword_${keywordCount}" required>
@@ -103,7 +120,11 @@
             document.getElementById('keywords_container').appendChild(keywordDiv);
         });
 
+        // Remove keyword input fields dynamically
+        // Listen for click events on the whole document body for better performance
         document.body.addEventListener('click', function(e) {
+            
+            // If clicked element is the "remove" button, remove its parent keyword input field
             if (e.target && e.target.className === 'remove_keyword') {
                 e.target.parentElement.remove();
             }
