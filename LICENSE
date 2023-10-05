@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2023 mariuszkam4
+Copyright (c) 2023 Mariusz Kamiński
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +19,14 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+### Important Note on the use of the arXiv API:
+
+This software utilizes the arXiv API. When using this software, you must adhere to the terms and conditions of the arXiv API:
+
+- E-prints from arXiv are protected by copyright laws. Redistribution of e-prints requires permission from the copyright holder.
+- You are free to use descriptive metadata about arXiv e-prints under the terms of the Creative Commons Universal (CC0 1.0) Public Domain Declaration.
+- Observe restrictions pertaining to the usage of the arXiv API, including query rate limits.
+- Do not attempt to store and serve e-prints (PDFs, source files, etc.) from arXiv unless you have the explicit consent from the copyright holder or are authorized by the license under which the e-print was submitted.
+
+Full terms of use for the arXiv API can be found [here](link to the arXiv API terms of use).
