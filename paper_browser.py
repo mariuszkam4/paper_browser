@@ -11,11 +11,15 @@ def index():
     publications = []
     start_date = None
     end_date = None
+    keywords_list = []
 
     if request.method == 'POST':
-        keyword = request.form.get('keyword')
-        if not keyword.isalnum(): 
-            return "Invalid keyword", 400
+        # Thid code will retrive all the keywords from the dynamically generated fields
+        for key in request.form:
+            if "keyword_" in key:
+                keyword_value = request.form.get(key) or ''
+                if keyword_value:
+                    keywords_list.append(keyword_value.strip())
         
         max_results = request.form.get('max_results')
         if not max_results.isnumeric():
@@ -41,10 +45,12 @@ def index():
         
         sortBy = request.form.get ('sortBy', 'relevance')
         sortOrder = request.form.get ('sortOrder', 'ascending')
-
+        keywords_query = " AND ".join([f"ti:\"{keyword}\"" for keyword in keywords_list])
+        search_query = f"({keywords_query}) AND submittedDate:[{start_date.strftime('%Y-%m-%d')}T00:00:00Z TO {end_date.strftime('%Y-%m-%d')}T23:59:59Z]"
+        
         url = "http://export.arxiv.org/api/query"
         parameters = {
-            "search_query": f"{keyword} AND submittedDate:[{start_date.strftime('%Y-%m-%d')}T00:00:00Z TO {end_date.strftime('%Y-%m-%d')}T23:59:59Z]",
+            "search_query": search_query,
             "max_results": int(max_results),
             "sortBy": sortBy,
             "sortOrder": sortOrder
@@ -69,7 +75,7 @@ def index():
                     "link": link
                 })
 
-    return render_template('index.html', publications=publications)
+    return render_template('index.html', publications=publications, keywords_list=keywords_list, start_date=start_date, end_date=end_date)
 
 if __name__ == '__main__':
     app.run(debug=True)

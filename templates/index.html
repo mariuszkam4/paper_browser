@@ -5,23 +5,28 @@
     <title>Paper Browser</title>
     <script type="text/javascript" async
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
+    </script>
     <script type="text/x-mathjax-config">
         MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ['$','$'], ['\\(','\\)'] ]
-        }
+            tex2jax: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
         });
-</script>
+    </script>
 </head>
 <body>
     <form method="POST" action="/">
-        <label for="keyword">Keyword:</label>
-        <input type="text" name="keyword" required>
+        <div id="keywords_container">
+            <div class="keyword_input">
+                <label for="keyword_1">Keyword:</label>
+                <input type="text" name="keyword_1" required>
+            </div>
+        </div>
+        <button type="button" id="add_keyword">Add Another Keyword</button>
 
         <label for="max_results">Max Results:</label>
         <input type="text" name="max_results" required>
-        
+
         <label for="date_range">Select Date Range:</label>
         <select name="date_range" id="date_range" required>
             <option value="1">Last year</option>
@@ -47,10 +52,17 @@
             <label for="end_date">End Date:</label>
             <input type="date" name="end_date">
         </div>
-        
-        
+
         <button type="submit">Search</button>
     </form>
+    {% if publications %}
+    <p>Used keywords: 
+        {% for keyword in keywords_list %}
+        {{ keyword }}{% if not loop.last %}, {% endif %}
+    {% endfor %}
+    </p>
+    <p>Date range: {{ start_date }} to {{ end_date }}</p>
+    
     <ul>
         {% for publication in publications %}
             <li>
@@ -60,7 +72,8 @@
             </li>
         {% endfor %}
     </ul>
-    
+    {% endif %}
+
     <script>
         document.getElementById('date_range').addEventListener('change', function() {
             var customDateRange = document.getElementById('custom_date_range');
@@ -77,6 +90,24 @@
             }
         });
 
+        var keywordCount = 1;
+        document.getElementById('add_keyword').addEventListener('click', function() {
+            keywordCount++;
+            var keywordDiv = document.createElement('div');
+            keywordDiv.className = 'keyword_input';
+            keywordDiv.innerHTML = `
+                <label for="keyword_${keywordCount}">Keyword:</label>
+                <input type="text" name="keyword_${keywordCount}" required>
+                <button type="button" class="remove_keyword">Remove</button>
+            `;
+            document.getElementById('keywords_container').appendChild(keywordDiv);
+        });
+
+        document.body.addEventListener('click', function(e) {
+            if (e.target && e.target.className === 'remove_keyword') {
+                e.target.parentElement.remove();
+            }
+        });
     </script>
 </body>
 </html>
