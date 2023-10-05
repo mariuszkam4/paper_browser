@@ -54,8 +54,15 @@ def index():
         # Construct the search query for the API
         sortBy = request.form.get ('sortBy', 'relevance')
         sortOrder = request.form.get ('sortOrder', 'ascending')
-        keywords_query = " AND ".join([f"ti:\"{keyword}\"" for keyword in keywords_list])
-        search_query = f"({keywords_query}) AND submittedDate:[{start_date.strftime('%Y-%m-%d')}T00:00:00Z TO {end_date.strftime('%Y-%m-%d')}T23:59:59Z]"
+        
+        keywords_query = ""
+        if keywords_list:
+            keywords_query = " AND ".join([f"ti:\"{keyword}\"" for keyword in keywords_list])
+
+        if keywords_query:
+            search_query = f"({keywords_query}) AND submittedDate:[{start_date.strftime('%Y-%m-%d')}T00:00:00Z TO {end_date.strftime('%Y-%m-%d')}T23:59:59Z]"
+        else:
+            search_query = f"submittedDate:[{start_date.strftime('%Y-%m-%d')}T00:00:00Z TO {end_date.strftime('%Y-%m-%d')}T23:59:59Z]"
         
         # Fetch results from arXiv API
         url = "http://export.arxiv.org/api/query"
